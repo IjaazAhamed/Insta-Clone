@@ -7,28 +7,25 @@ import {Link} from 'react-router-dom';
 
 
 function Form() {
-  const[file,setFile]=useState('')
-  const [name,setAuthor]=useState('')
-  const[location,setLocation]=useState('')
- const[description,setDescription]=useState('')
- 
-  const imageUpload=(event)=>{
-    console.log(event.target.files[0])
-    setFile(event.target.files[0])
-  }
+  
 
   async function userspost(event){
     event.preventDefault()
+    
+    const author= event.target.elements.author.value
+    const location= event.target.elements.location.value
+    const description= event.target.elements.description.value
     const date = moment(new Date()).format("DD/MM/YYYY")
+    const file=event.target.elements.PostImage.files[0]
     const formData=new FormData();
-    formData.append("name", name);
+    formData.append("name", author);
     formData.append("location", location);
     formData.append("description", description);
     
     formData.append("PostImage", file);
     formData.append("date", date);
-  
-     fetch('http://localhost:5000/posts',{
+   
+    const response=await fetch ('https://instaclone-back.herokuapp.com/posts',{
       method:'POST',
       headers:{ },
       body: formData,
@@ -36,7 +33,8 @@ function Form() {
     })
    
     .then((response) => response.text())
-    .then((data) => console.log(data));
+    .catch(error=>console.log(error.message))
+
   
   }
 
@@ -47,18 +45,16 @@ function Form() {
         <form onSubmit={userspost} encType='multipart/form-data'>
 
             <input type="file" id='file' name='PostImage' 
-        onChange={imageUpload}class='inp' placeholder='No file chosen' required/>
+        className='inp' placeholder='No file chosen' required/>
            
-              <input type="text" id='author'  value={name}
-        onChange={(e)=>setAuthor(e.target.value)} class='inp' placeholder='Author' required/>
-              <input  type="text" id='location'  value={location}
-        onChange={(e)=>setLocation(e.target.value)} class='inp' placeholder='Location' required/>
+              <input type="text" id='author'  
+        className='inp' placeholder='Author' required/>
+              <input  type="text" id='location'   className='inp' placeholder='Location' required/>
             
-            <input type="text" id='description'  value={description}
-        onChange={(e)=>setDescription(e.target.value)} class='inp' placeholder='Description' required/><br></br><br></br>
+            <input type="text" id='description'  className='inp' placeholder='Description' required/><br></br><br></br>
             
             
-              <button id='btn1'><Link to='/Homepage'>  Post</Link></button>
+              <button id='btn1' type="submit"><Link to='/Homepage'>  Post</Link></button>
             {/*  */}
         </form>
       </div>

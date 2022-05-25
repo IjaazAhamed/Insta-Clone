@@ -7,16 +7,14 @@ export default function Data() {
 
   const [items, setItems] = useState([]);
     useEffect(() => {
-        
-        fetch("http://localhost:5000/post")
-          .then(res =>res.json())
-          .then((result) => {
-            setItems(result.user);
-            }
-          )
-          .catch((e)=>console.log(e))
+        async function getdata(){
+          let users=await fetch("https://instaclone-back.herokuapp.com/post")
+          let reqdata=await users.json()
+          setItems([...reqdata.data]);
+        } 
+       getdata()
       }, [])
-    console.log(items) 
+    
   return (<>
       <div className='head'>
           <Head/>
